@@ -69,10 +69,20 @@ function toNotBeEditable () {
     );
 }
 
+function toBeFrozen () {
+    isObject(this.actual, 'expect(actual).toBeFrozen()', 'an Object');
+    assert(
+        Object.isFrozen(this.actual) === true,
+        'expect object %s to be frozen',
+        this.actual
+    );
+}
+
 exports = module.exports = {
     toHaveProp,
     toHaveEnumKey,
     toHaveEnumKeys,
     toBeIn,
     toNotBeEditable,
+    toBeFrozen,
 };

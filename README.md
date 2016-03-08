@@ -82,3 +82,14 @@ Asserts the given `key` string is in the given `obj` object.
 expect('TRUE').toBeIn({ TRUE: 1, FALSE: 0, }) // success
 expect('MAYBE').toBeIn({ TRUE: 1, FALSE: 0, }) // failure
 ```
+
+### toBeFrozen
+
+> `expect(obj).toBeFrozen()`
+
+Asserts the given `obj` object is frozen.
+
+```js
+expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toBeFrozen() // success
+expect({ TRUE: 1, FALSE: 0, }).toBeFrozen() // failure
+```

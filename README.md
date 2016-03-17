@@ -1,4 +1,4 @@
-# expect-enum [![npm package][npm-badge]][npm]
+# expect-renum [![npm package][npm-badge]][npm]
 
 [build-badge]: https://img.shields.io/travis/bydooweedoo/expect-renum/master.svg?style=flat-square
 [build]: https://travis-ci.org/bydooweedoo/expect-renum
@@ -12,7 +12,7 @@
 
 Using [npm](https://www.npmjs.org/):
 
-    $ npm install expect expect-renum
+    $ npm install expect expect-renum --save-dev
 
 Then with a module bundler like [webpack](https://webpack.github.io/), use as you would anything else:
 
@@ -32,6 +32,9 @@ expect.extend(expectRenum);
 
 ## Assertions
 
+> `// ✔ === success (passed the test)`<br />
+> `// ✘ === failure (throw exception)`
+
 ### toHaveEnumKey
 
 > `expect(enum).toHaveEnumKey(key, [message])`
@@ -39,8 +42,8 @@ expect.extend(expectRenum);
 Asserts the given `enum` object has an attribute with the given `key`.
 
 ```js
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKey('TRUE') // success
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKey('MAYBE') // failure
+expect(renum('TRUE', 'FALSE')).toHaveEnumKey('TRUE') // ✔
+expect(renum('TRUE', 'FALSE')).toHaveEnumKey('MAYBE') // ✘
 ```
 
 ### toNotHaveEnumKey
@@ -50,21 +53,70 @@ expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKey('MAYBE') // failure
 Asserts the given `enum` object has not an attribute with the given `key`.
 
 ```js
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toNotHaveEnumKey('MAYBE') // success
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toNotHaveEnumKey('TRUE') // failure
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKey('MAYBE') // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKey('TRUE') // ✘
 ```
 
 ### toHaveEnumKeys
 
 > `expect(enum).toHaveEnumKeys(keys)`
 
-Asserts the given `enum` object has all given `keys` attributes.
+Asserts the given `enum` object has **all** given `keys` attributes.
 
 ```js
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKeys([ 'TRUE', ]) // success
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKeys([ 'TRUE', 'FALSE', ]) // success
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKeys([ 'MAYBE', ]) // failure
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKeys([ 'TRUE', 'FALSE', 'MAYBE', ]) // failure
+expect(renum('TRUE', 'FALSE')).toHaveEnumKeys(['TRUE']) // ✔
+expect(renum('TRUE', 'FALSE')).toHaveEnumKeys(['TRUE', 'FALSE']) // ✔
+expect(renum('TRUE', 'FALSE')).toHaveEnumKeys(['MAYBE']) // ✘
+expect(renum('TRUE', 'FALSE')).toHaveEnumKeys(['TRUE', 'FALSE', 'MAYBE']) // ✘
+```
+
+### toNotHaveEnumKeys
+
+> `expect(enum).toNotHaveEnumKeys(keys)`
+
+Asserts the given `enum` object has **not any** given `keys` attributes.
+
+```js
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKeys(['MAYBE']) // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKeys(['MAYBE', 'MAYBE_NOT']) // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKeys(['TRUE']) // ✘
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKeys(['TRUE', 'FALSE']) // ✘
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumKeys(['TRUE', 'FALSE', 'MAYBE']) // ✘
+```
+
+### toHaveEnumPair
+
+> `expect(enum).toHaveEnumPair(pair, [message])`
+
+Asserts the given `enum` object has an attribute with the given `pair[0]` key pointing to given `pair[1]` value.
+
+```js
+expect(renum('TRUE', 'FALSE')).toHaveEnumPair(['TRUE', 'TRUE']) // ✔
+expect(renum('TRUE', 'FALSE')).toHaveEnumPair(['MAYBE', 'MAYBE']) // ✘
+```
+
+### toNotHaveEnumPair
+
+> `expect(enum).toNotHaveEnumPair(pair, [message])`
+
+Asserts the given `enum` object has not an attribute with the given `pair[0]` key pointing to given `pair[1]` value.
+
+```js
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumPair(['MAYBE', 'MAYBE']) // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumPair(['TRUE', 1]) // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumPair([1, 'TRUE']) // ✔
+expect(renum('TRUE', 'FALSE')).toNotHaveEnumPair(['TRUE', 'TRUE']) // ✘
+```
+
+### toBeEditable
+
+> `expect(obj).toBeEditable()`
+
+Asserts the given `obj` object to be editable.
+
+```js
+expect({TRUE: 'TRUE', FALSE: 'FALSE'}).toBeEditable() // ✔
+expect(renum('TRUE', 'FALSE')).toBeEditable() // ✘
 ```
 
 ### toNotBeEditable
@@ -74,8 +126,8 @@ expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKeys([ 'TRUE', 'FALSE', 
 Asserts the given `enum` object to not be editable.
 
 ```js
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toNotBeEditable() // success
-expect({ TRUE: 1, FALSE: 0, }).toNotBeEditable() // failure
+expect(renum('TRUE', 'FALSE')).toNotBeEditable() // ✔
+expect({TRUE: 'TRUE', FALSE: 'FALSE'}).toNotBeEditable() // ✘
 ```
 
 ### toHaveProp
@@ -85,8 +137,19 @@ expect({ TRUE: 1, FALSE: 0, }).toNotBeEditable() // failure
 Asserts the given `obj` object has a property with the given `key`.
 
 ```js
-expect({ TRUE: 1, FALSE: 0, }).toHaveProp('TRUE') // success
-expect({ TRUE: 1, FALSE: 0, }).toHaveProp('MAYBE') // failure
+expect({TRUE: 1, FALSE: 0}).toHaveProp('TRUE') // ✔
+expect({TRUE: 1, FALSE: 0}).toHaveProp('MAYBE') // ✘
+```
+
+### toNotHaveProp
+
+> `expect(obj).toNotHaveProp(key)`
+
+Asserts the given `obj` object has not a property with the given `key`.
+
+```js
+expect({TRUE: 1, FALSE: 0}).toNotHaveProp('MAYBE') // ✔
+expect({TRUE: 1, FALSE: 0}).toNotHaveProp('TRUE') // ✘
 ```
 
 ### toBeIn
@@ -96,8 +159,19 @@ expect({ TRUE: 1, FALSE: 0, }).toHaveProp('MAYBE') // failure
 Asserts the given `key` string is in the given `obj` object.
 
 ```js
-expect('TRUE').toBeIn({ TRUE: 1, FALSE: 0, }) // success
-expect('MAYBE').toBeIn({ TRUE: 1, FALSE: 0, }) // failure
+expect('TRUE').toBeIn({TRUE: 1, FALSE: 0}) // ✔
+expect('MAYBE').toBeIn({TRUE: 1, FALSE: 0}) // ✘
+```
+
+### toNotBeIn
+
+> `expect(key).toNotBeIn(obj)`
+
+Asserts the given `key` string is not in the given `obj` object.
+
+```js
+expect('MAYBE').toNotBeIn({TRUE: 1, FALSE: 0}) // ✔
+expect('TRUE').toNotBeIn({TRUE: 1, FALSE: 0}) // ✘
 ```
 
 ### toBeFrozen
@@ -107,6 +181,19 @@ expect('MAYBE').toBeIn({ TRUE: 1, FALSE: 0, }) // failure
 Asserts the given `obj` object is frozen.
 
 ```js
-expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toBeFrozen() // success
-expect({ TRUE: 1, FALSE: 0, }).toBeFrozen() // failure
+expect(renum([['TRUE', 1], ['FALSE', 0]])).toBeFrozen() // ✔
+expect(Object.freeze({TRUE: 1, FALSE: 0})).toBeFrozen() // ✔
+expect({TRUE: 1, FALSE: 0}).toBeFrozen() // ✘
+```
+
+### toNotBeFrozen
+
+> `expect(obj).toNotBeFrozen()`
+
+Asserts the given `obj` object is not frozen.
+
+```js
+expect({TRUE: 1, FALSE: 0}).toNotBeFrozen() // ✔
+expect(renum([['TRUE', 1], ['FALSE', 0]])).toNotBeFrozen() // ✘
+expect(Object.freeze({TRUE: 1, FALSE: 0})).toNotBeFrozen() // ✘
 ```

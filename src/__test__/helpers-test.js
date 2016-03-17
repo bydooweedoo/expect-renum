@@ -16,7 +16,25 @@ describe('helpers', () => {
 
         it('should not throw if given argument is an object', () => {
             expect(() => helpers.isObject({}, 'fooName', 'an "Object"'))
-                .toNotThrow('The "actual" argument in fooName must be an "Object", {} was given');
+                .toNotThrow();
+        });
+
+    });
+
+    describe('#isPair', () => {
+
+        it('should be a function', () => {
+            expect(helpers.isPair).toBeA(Function);
+        });
+
+        it('should throw if given argument is not a pair', () => {
+            expect(() => helpers.isPair(null, 'fooName', 'a "Pair"'))
+                .toThrow('The "pair" argument in fooName must be a "Pair", null was given');
+        });
+
+        it('should not throw if given argument is a pair', () => {
+            expect(() => helpers.isPair([1, 2], 'fooName', 'a "Pair"'))
+                .toNotThrow();
         });
 
     });
@@ -58,6 +76,29 @@ describe('helpers', () => {
             expect(helpers.isNotNilObject(undefined)).toEqual(false);
             expect(helpers.isNotNilObject(true)).toEqual(false);
             expect(helpers.isNotNilObject('1')).toEqual(false);
+        });
+
+    });
+
+    describe('#isNotNilPair', () => {
+
+        it('should be a function', () => {
+            expect(helpers.isNotNilPair).toBeA(Function);
+        });
+
+        it('should returns true if given argument is a pair and is not nil', () => {
+            expect(helpers.isNotNilPair([1, 2])).toEqual(true);
+            expect(helpers.isNotNilPair(['1', true])).toEqual(true);
+            expect(helpers.isNotNilPair([null, null])).toEqual(true);
+        });
+
+        it('should returns false if given argument is not an object or is nil', () => {
+            expect(helpers.isNotNilPair(null)).toEqual(false);
+            expect(helpers.isNotNilPair(undefined)).toEqual(false);
+            expect(helpers.isNotNilPair(true)).toEqual(false);
+            expect(helpers.isNotNilPair([])).toEqual(false);
+            expect(helpers.isNotNilPair(['1'])).toEqual(false);
+            expect(helpers.isNotNilPair(['1', '2', '3'])).toEqual(false);
         });
 
     });

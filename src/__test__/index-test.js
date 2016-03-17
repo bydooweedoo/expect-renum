@@ -77,6 +77,54 @@ describe('expect-renum', () => {
 
     });
 
+    describe('#toHaveEnumPair', () => {
+
+        it('should throw when the actual is not an enum', () => {
+            expect(() => expect('').toHaveEnumPair(['test', true])).toThrow("must be an Enum");
+            expect(() => expect(true).toHaveEnumPair(['test', true])).toThrow("must be an Enum");
+            expect(() => expect(null).toHaveEnumPair(['test', true])).toThrow("must be an Enum");
+        });
+
+        it('should throw when the given pair is not a Pair', () => {
+            expect(() => expect({}).toHaveEnumPair(['test'])).toThrow("must be a Pair");
+            expect(() => expect({}).toHaveEnumPair(null)).toThrow("must be a Pair");
+            expect(() => expect({}).toHaveEnumPair({})).toThrow("must be a Pair");
+        });
+
+        it('should throw when an enum does not have given pair', () => {
+            expect(() => expect({}).toHaveEnumPair(['test', true])).toThrow("to have pair [ 'test', true ]");
+        });
+
+        it('should not throw when an object have given pair', () => {
+            expect(() => expect({test: true}).toHaveEnumPair(['test', true])).toNotThrow("to have pair [ 'test', true ]");
+        });
+
+    });
+
+    describe('#toNotHaveEnumPair', () => {
+
+        it('should throw when the actual is not an enum', () => {
+            expect(() => expect('').toNotHaveEnumPair(['test', true])).toThrow("must be an Enum");
+            expect(() => expect(true).toNotHaveEnumPair(['test', true])).toThrow("must be an Enum");
+            expect(() => expect(null).toNotHaveEnumPair(['test', true])).toThrow("must be an Enum");
+        });
+
+        it('should throw when the given pair is not a Pair', () => {
+            expect(() => expect({}).toNotHaveEnumPair(['test'])).toThrow("must be a Pair");
+            expect(() => expect({}).toNotHaveEnumPair(null)).toThrow("must be a Pair");
+            expect(() => expect({}).toNotHaveEnumPair({})).toThrow("must be a Pair");
+        });
+
+        it('should throw when an enum does have given pair', () => {
+            expect(() => expect({test: true}).toNotHaveEnumPair(['test', true])).toThrow("to not have pair [ 'test', true ]");
+        });
+
+        it('should not throw when an object have given pair', () => {
+            expect(() => expect({test1: true}).toNotHaveEnumPair(['test', true])).toNotThrow("to not have pair [ 'test', true ]");
+        });
+
+    });
+
     describe('#toHaveEnumKeys', () => {
 
         it('should throw when the actual is not an enum', () => {
@@ -92,7 +140,7 @@ describe('expect-renum', () => {
         it('should not throw when an object have given property', () => {
             expect(() => (expect({ test1: true, test2: false })
                 .toHaveEnumKeys(['test1', 'test2'])))
-                .toNotThrow("to have all keys [ 'test1', 'test2' ]");
+                .toNotThrow();
         });
 
     });
@@ -131,7 +179,7 @@ describe('expect-renum', () => {
                     'test1',
                     'test2',
                 ])
-            )).toNotThrow("to not have any keys [ 'test1', 'test2' ]");
+            )).toNotThrow();
         });
 
     });
@@ -149,7 +197,7 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when key is in given object', () => {
-            expect(() => expect('test').toBeIn({test: true})).toNotThrow("expected key 'test' to be in object");
+            expect(() => expect('test').toBeIn({test: true})).toNotThrow();
         });
 
     });
@@ -167,7 +215,7 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when key is not in given object', () => {
-            expect(() => expect('test').toNotBeIn({})).toNotThrow("expected key 'test' to not be in object");
+            expect(() => expect('test').toNotBeIn({})).toNotThrow();
         });
 
     });
@@ -185,7 +233,7 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when object can be edited', () => {
-            expect(() => expect({test: true}).toBeEditable()).toNotThrow("to be editable");
+            expect(() => expect({test: true}).toBeEditable()).toNotThrow();
         });
 
     });
@@ -205,7 +253,7 @@ describe('expect-renum', () => {
         it('should not throw when object cannot be edited', () => {
             const obj = Object.freeze({test: true});
 
-            expect(() => expect(obj).toNotBeEditable()).toNotThrow("to not be editable");
+            expect(() => expect(obj).toNotBeEditable()).toNotThrow();
         });
 
     });
@@ -225,7 +273,7 @@ describe('expect-renum', () => {
         it('should not throw when object is frozen', () => {
             const obj = Object.freeze({test: true});
 
-            expect(() => expect(obj).toBeFrozen()).toNotThrow("to be frozen");
+            expect(() => expect(obj).toBeFrozen()).toNotThrow();
         });
 
     });
@@ -243,7 +291,7 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when object not is frozen', () => {
-            expect(() => expect({test: true}).toNotBeFrozen()).toNotThrow("to not be frozen");
+            expect(() => expect({test: true}).toNotBeFrozen()).toNotThrow();
         });
 
     });

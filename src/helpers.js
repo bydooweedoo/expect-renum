@@ -16,6 +16,14 @@ export const isNotNilObject = R.both(
     R.compose(R.not, R.isNil)
 );
 
+export const isNotNilPair = R.both(
+    R.both(
+        R.is(Array),
+        R.pipe(R.length, R.equals(2))
+    ),
+    R.compose(R.not, R.isNil)
+);
+
 export const messageOrDefault = R.unapply(
     R.cond([
         [R.pipe(R.head, R.is(String)), R.head],
@@ -50,5 +58,13 @@ export const isObject = R.curry((obj, fooName, typeName) => {
         isNotNilObject(obj),
         `The "actual" argument in ${fooName} must be ${typeName}, %s was given`,
         obj
+    );
+});
+
+export const isPair = R.curry((pair, fooName, typeName) => {
+    assert(
+        isNotNilPair(pair),
+        `The "pair" argument in ${fooName} must be ${typeName}, %s was given`,
+        pair
     );
 });

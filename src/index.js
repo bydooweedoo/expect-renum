@@ -1,6 +1,7 @@
 import { assert } from 'expect';
 import {
     isObject,
+    isPair,
     messageOrDefault,
     throws,
     editFirstKey,
@@ -45,6 +46,32 @@ export function toNotHaveEnumKey(key, message) {
         messageOrDefault(message, 'expected enum %s to not have key %s'),
         this.actual,
         key
+    );
+}
+
+export function toHaveEnumPair(pair, message) {
+    isObject(this.actual, 'expect(actual).toHaveEnumPair()', 'an Enum');
+    isPair(pair, 'expect().toHaveEnumPair(pair)', 'a Pair: [key, value]');
+    const [key, value] = pair;
+
+    assert(
+        (key in this.actual && this.actual[key] === value),
+        messageOrDefault(message, 'expected enum %s to have pair %s'),
+        this.actual,
+        pair
+    );
+}
+
+export function toNotHaveEnumPair(pair, message) {
+    isObject(this.actual, 'expect(actual).toNotHaveEnumPair()', 'an Enum');
+    isPair(pair, 'expect().toNotHaveEnumPair(pair)', 'a Pair: [key, value]');
+    const [key, value] = pair;
+
+    assert(
+        (!(key in this.actual) || this.actual[key] !== value),
+        messageOrDefault(message, 'expected enum %s to not have pair %s'),
+        this.actual,
+        pair
     );
 }
 
@@ -131,6 +158,8 @@ export default {
     toNotHaveEnumKey,
     toHaveEnumKeys,
     toNotHaveEnumKeys,
+    toHaveEnumPair,
+    toNotHaveEnumPair,
     toBeIn,
     toNotBeIn,
     toBeEditable,

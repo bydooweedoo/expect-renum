@@ -1,11 +1,9 @@
-'use strict';
-
-const expect = require('expect');
-const expectEnum = require('..');
+import expect from 'expect';
+import expectRenum from '..';
 
 describe('expect-renum', () => {
 
-    before(() => expect.extend(expectEnum));
+    before(() => expect.extend(expectRenum));
 
     describe('#toHaveProp', () => {
 
@@ -38,7 +36,7 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when an object have given property', () => {
-            expect(() => expect({ test2: true, }).toNotHaveProp('test')).toNotThrow("to not have property 'test'");
+            expect(() => expect({test2: true}).toNotHaveProp('test')).toNotThrow("to not have property 'test'");
         });
 
     });
@@ -56,7 +54,25 @@ describe('expect-renum', () => {
         });
 
         it('should not throw when an object have given property', () => {
-            expect(() => expect({ test: true, }).toHaveEnumKey('test')).toNotThrow("to have key 'test'");
+            expect(() => expect({test: true}).toHaveEnumKey('test')).toNotThrow("to have key 'test'");
+        });
+
+    });
+
+    describe('#toNotHaveEnumKey', () => {
+
+        it('should throw when the actual is not an enum', () => {
+            expect(() => expect('').toNotHaveEnumKey('test')).toThrow("must be an Enum");
+            expect(() => expect(true).toNotHaveEnumKey('test')).toThrow("must be an Enum");
+            expect(() => expect(null).toNotHaveEnumKey('test')).toThrow("must be an Enum");
+        });
+
+        it('should throw when an enum does have given property', () => {
+            expect(() => expect({test: true}).toNotHaveEnumKey('test')).toThrow("to not have key 'test'");
+        });
+
+        it('should not throw when an enum does not have given property', () => {
+            expect(() => expect({}).toNotHaveEnumKey('test')).toNotThrow("to not have key 'test'");
         });
 
     });
@@ -81,6 +97,45 @@ describe('expect-renum', () => {
 
     });
 
+    describe('#toNotHaveEnumKeys', () => {
+
+        it('should throw when the actual is not an enum', () => {
+            expect(() => expect('').toNotHaveEnumKeys(['test'])).toThrow("must be an Enum");
+            expect(() => expect(true).toNotHaveEnumKeys(['test'])).toThrow("must be an Enum");
+            expect(() => expect(null).toNotHaveEnumKeys(['test'])).toThrow("must be an Enum");
+        });
+
+        it('should throw when an enum does have all or any given keys', () => {
+            expect(() => expect({
+                test1: true,
+                test2: true,
+            }).toNotHaveEnumKeys([
+                'test1',
+                'test2',
+            ])).toThrow("to not have any keys [ 'test1', 'test2' ]");
+            expect(() => expect({
+                test3: true,
+                test2: true,
+            }).toNotHaveEnumKeys([
+                'test1',
+                'test2',
+            ])).toThrow("to not have any keys [ 'test1', 'test2' ]");
+        });
+
+        it('should not throw when an object have given property', () => {
+            expect(() => (
+                expect({
+                    test3: true,
+                    test4: false,
+                }).toNotHaveEnumKeys([
+                    'test1',
+                    'test2',
+                ])
+            )).toNotThrow("to not have any keys [ 'test1', 'test2' ]");
+        });
+
+    });
+
     describe('#toBeIn', () => {
 
         it('should throw when the given arg is not an object', () => {
@@ -95,6 +150,24 @@ describe('expect-renum', () => {
 
         it('should not throw when key is in given object', () => {
             expect(() => expect('test').toBeIn({test: true})).toNotThrow("expected key 'test' to be in object");
+        });
+
+    });
+
+    describe('#toNotBeIn', () => {
+
+        it('should throw when the given arg is not an object', () => {
+            expect(() => expect('key').toNotBeIn('test')).toThrow("must be an Object");
+            expect(() => expect('key').toNotBeIn(true)).toThrow("must be an Object");
+            expect(() => expect('key').toNotBeIn(null)).toThrow("must be an Object");
+        });
+
+        it('should throw when key is in given object', () => {
+            expect(() => expect('test').toNotBeIn({test: true})).toThrow("expected key 'test' to not be in object");
+        });
+
+        it('should not throw when key is not in given object', () => {
+            expect(() => expect('test').toNotBeIn({})).toNotThrow("expected key 'test' to not be in object");
         });
 
     });
@@ -153,6 +226,24 @@ describe('expect-renum', () => {
             const obj = Object.freeze({test: true});
 
             expect(() => expect(obj).toBeFrozen()).toNotThrow("to be frozen");
+        });
+
+    });
+
+    describe('#toNotBeFrozen', () => {
+
+        it('should throw when the actual is not an Object', () => {
+            expect(() => expect('').toNotBeFrozen()).toThrow("must be an Object");
+            expect(() => expect(true).toNotBeFrozen()).toThrow("must be an Object");
+            expect(() => expect(null).toNotBeFrozen()).toThrow("must be an Object");
+        });
+
+        it('should throw when object is frozen', () => {
+            expect(() => expect(Object.freeze({test: true})).toNotBeFrozen()).toThrow("to not be frozen");
+        });
+
+        it('should not throw when object not is frozen', () => {
+            expect(() => expect({test: true}).toNotBeFrozen()).toNotThrow("to not be frozen");
         });
 
     });

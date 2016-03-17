@@ -1,40 +1,57 @@
-# expect-enum
+# expect-enum [![npm package][npm-badge]][npm]
 
-`expect-enum` is an extension for [expect](https://github.com/mjackson/expect) that lets you write better assertions for Enum or Immutable data in javascript.
+[build-badge]: https://img.shields.io/travis/bydooweedoo/expect-renum/master.svg?style=flat-square
+[build]: https://travis-ci.org/bydooweedoo/expect-renum
+
+[npm-badge]: https://img.shields.io/npm/v/expect-renum.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/expect-renum
+
+`expect-renum` is an extension for [expect](https://github.com/mjackson/expect) that lets you write better assertions for Enum or Immutable data in javascript.
 
 ## Installation
 
 Using [npm](https://www.npmjs.org/):
 
-    $ npm install expect expect-enum
+    $ npm install expect expect-renum
 
 Then with a module bundler like [webpack](https://webpack.github.io/), use as you would anything else:
 
 ```js
 // using an ES6 transpiler, like babel
-import expect from 'expect'
-import expectEnum from 'expect-enum'
+import expect from 'expect';
+import expectRenum from 'expect-renum';
 
-expect.extend(expectEnum)
+expect.extend(expectRenum);
 
 // not using an ES6 transpiler
-var expect = require('expect')
-var expectEnum = require('expect-enum')
+var expect = require('expect');
+var expectRenum = require('expect-renum');
 
-expect.extend(expectEnum)
+expect.extend(expectRenum);
 ```
 
 ## Assertions
 
 ### toHaveEnumKey
 
-> `expect(enum).toHaveEnumKey(key)`
+> `expect(enum).toHaveEnumKey(key, [message])`
 
 Asserts the given `enum` object has an attribute with the given `key`.
 
 ```js
 expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKey('TRUE') // success
 expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toHaveEnumKey('MAYBE') // failure
+```
+
+### toNotHaveEnumKey
+
+> `expect(enum).toNotHaveEnumKey(key, [message])`
+
+Asserts the given `enum` object has not an attribute with the given `key`.
+
+```js
+expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toNotHaveEnumKey('MAYBE') // success
+expect(Object.freeze({ TRUE: 1, FALSE: 0, })).toNotHaveEnumKey('TRUE') // failure
 ```
 
 ### toHaveEnumKeys

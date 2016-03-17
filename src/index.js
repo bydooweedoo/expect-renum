@@ -1,131 +1,140 @@
-const R = require('ramda');
-const expect = require('expect');
-const assert = expect.assert;
+import { assert } from 'expect';
+import {
+    isObject,
+    messageOrDefault,
+    throws,
+    editFirstKey,
+    enumHasAllKeys,
+    enumHasAnyKeys,
+} from './helpers';
 
-const enumHasKeys = Enum => R.reduce(
-    (acc, key) => (acc ? R.hasIn(key, Enum) : acc),
-    true
-);
-
-const isNotNilObject = R.both(
-    R.is(Object),
-    R.pipe(R.isNil, R.not)
-);
-
-const throws = fn => {
-    try {
-        fn();
-    } catch (error) {
-        return true;
-    }
-    return false;
-};
-
-function isObject(obj, fooName, typeName) {
-    assert(
-        isNotNilObject(obj),
-        `The "actual" argument in ${fooName} must be ${typeName}, %s was given`,
-        obj
-    );
-}
-
-function toHaveProp(key) {
+export function toHaveProp(key, message) {
     isObject(this.actual, 'expect(actual).toHaveProp()', 'an Object');
     assert(
         this.actual.hasOwnProperty(key),
-        'expected object %s to have property %s',
+        messageOrDefault(message, 'expected object %s to have property %s'),
         this.actual,
         key
     );
 }
 
-function toNotHaveProp(key) {
+export function toNotHaveProp(key, message) {
     isObject(this.actual, 'expect(actual).toNotHaveProp()', 'an Object');
     assert(
         this.actual.hasOwnProperty(key) === false,
-        'expected object %s to not have property %s',
+        messageOrDefault(message, 'expected object %s to not have property %s'),
         this.actual,
         key
     );
 }
 
-function toHaveEnumKey(key) {
+export function toHaveEnumKey(key, message) {
     isObject(this.actual, 'expect(actual).toHaveEnumKey()', 'an Enum');
     assert(
         key in this.actual,
-        'expected enum %s to have key %s',
+        messageOrDefault(message, 'expected enum %s to have key %s'),
         this.actual,
         key
     );
 }
 
-function toHaveEnumKeys(keys) {
+export function toNotHaveEnumKey(key, message) {
+    isObject(this.actual, 'expect(actual).toNotHaveEnumKey()', 'an Enum');
+    assert(
+        !(key in this.actual),
+        messageOrDefault(message, 'expected enum %s to not have key %s'),
+        this.actual,
+        key
+    );
+}
+
+export function toHaveEnumKeys(keys, message) {
     isObject(this.actual, 'expect(actual).toHaveEnumKeys()', 'an Enum');
     assert(
-        enumHasKeys(this.actual)(keys),
-        'expect enum %s to have all keys %s',
+        enumHasAllKeys(this.actual)(keys) === true,
+        messageOrDefault(message, 'expect enum %s to have all keys %s'),
         this.actual,
         keys
     );
 }
 
-function toBeIn(obj) {
+export function toNotHaveEnumKeys(keys, message) {
+    isObject(this.actual, 'expect(actual).toNotHaveEnumKeys()', 'an Enum');
+    assert(
+        enumHasAnyKeys(this.actual)(keys) === false,
+        messageOrDefault(message, 'expect enum %s to not have any keys %s'),
+        this.actual,
+        keys
+    );
+}
+
+export function toBeIn(obj, message) {
     isObject(obj, 'expect().toBeIn(actual)', 'an Object');
     assert(
         this.actual in obj,
-        'expected key %s to be in object %o',
+        messageOrDefault(message, 'expected key %s to be in object %o'),
         this.actual,
         obj
     );
 }
 
-function editFirstKey(obj) {
-    'use strict';
-
-    const keys = Object.keys(obj);
-    const key = keys.length ? keys[0] : null;
-
-    if (key) {
-        obj[key] = '$$test';
-    } else {
-        obj.__$TEST = '$$test';
-    }
+export function toNotBeIn(obj, message) {
+    isObject(obj, 'expect().toNotBeIn(actual)', 'an Object');
+    assert(
+        !(this.actual in obj),
+        messageOrDefault(message, 'expected key %s to not be in object %o'),
+        this.actual,
+        obj
+    );
 }
 
-function toBeEditable() {
+export function toBeEditable(message) {
     isObject(this.actual, 'expect(actual).toBeEditable()', 'an Object');
     assert(
         throws(() => editFirstKey(this.actual)) === false,
-        'expected object %s to be editable',
+        messageOrDefault(message, 'expected object %s to be editable'),
         this.actual
     );
 }
 
-function toNotBeEditable() {
+export function toNotBeEditable(message) {
     isObject(this.actual, 'expect(actual).toNotBeEditable()', 'an Object');
     assert(
         throws(() => editFirstKey(this.actual)) === true,
-        'expected object %s to not be editable',
+        messageOrDefault(message, 'expected object %s to not be editable'),
         this.actual
     );
 }
 
-function toBeFrozen() {
+export function toBeFrozen(message) {
     isObject(this.actual, 'expect(actual).toBeFrozen()', 'an Object');
     assert(
         Object.isFrozen(this.actual) === true,
-        'expect object %s to be frozen',
+        messageOrDefault(message, 'expect object %s to be frozen'),
         this.actual
     );
 }
 
-module.exports = {
+export function toNotBeFrozen(message) {
+    isObject(this.actual, 'expect(actual).toNotBeFrozen()', 'an Object');
+    assert(
+        Object.isFrozen(this.actual) === false,
+        messageOrDefault(message, 'expect object %s to not be frozen'),
+        this.actual
+    );
+}
+
+export default {
     toHaveProp,
     toNotHaveProp,
     toHaveEnumKey,
+    toNotHaveEnumKey,
     toHaveEnumKeys,
+    toNotHaveEnumKeys,
     toBeIn,
+    toNotBeIn,
     toBeEditable,
     toNotBeEditable,
     toBeFrozen,
+    toNotBeFrozen,
 };

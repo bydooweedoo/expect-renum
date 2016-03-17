@@ -1,7 +1,10 @@
-# expect-renum [![npm package][npm-badge]][npm]
+# expect-renum [![npm package][npm-badge]][npm] [![Travis][build-badge]][build] [![Coveralls][coverage-badge]][coverage]
 
 [build-badge]: https://img.shields.io/travis/bydooweedoo/expect-renum/master.svg?style=flat-square
 [build]: https://travis-ci.org/bydooweedoo/expect-renum
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/bydooweedoo/expect-renum.svg?style=flat-square
+[coverage]: https://codecov.io/github/bydooweedoo/expect-renum
 
 [npm-badge]: https://img.shields.io/npm/v/expect-renum.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/expect-renum

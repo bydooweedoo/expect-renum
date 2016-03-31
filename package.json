@@ -1,6 +1,6 @@
 {
   "name": "expect-renum",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Expect extra test for renum package.",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
@@ -42,10 +42,10 @@
   "license": "MIT",
   "repository": "bydooweedoo/expect-renum",
   "dependencies": {
-    "ramda": "^0.19.1"
+    "ramda": "^0.20.1"
   },
   "peerDependencies": {
-    "expect": "1.14.x"
+    "expect": "^1.16.0"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -57,7 +57,7 @@
     "eslint": "^2.3.0",
     "eslint-config-airbnb": "^6.1.0",
     "eslint-plugin-react": "^4.2.1",
-    "expect": "1.14.x",
+    "expect": "^1.16.0",
     "matcha": "^0.6.1",
     "mocha": "^2.4.5",
     "nodemon": "^1.8.1",
